@@ -232,54 +232,36 @@ STEP-7 AND 8 THE DESIGN OF THE DATABASE -
 
 	......................................SOLUTION.........................................
 
-					................FUNCTION TO GET THE RANGE FOR AREA TABLE.....................
-					.                 																													.
-					.																																						.
-					.		function Haversine(lat1,lon1,lat2,lon2)																	.
-					.		{																																				.
-					. 		  var R = 6372.8; // Earth Radius in Kilometers												.
-					.       var dLat = Deg2Rad(lat2-lat1);  																		.
-					.    		var dLon = Deg2Rad(lon2-lon1);  																		.
-					.    		var a = Math.sin(dLat/2) * Math.sin(dLat/2) + 											.
-					.                    Math.cos(Deg2Rad(lat1)) * Math.cos(Deg2Rad(lat2)) * 		.
-					.                    Math.sin(dLon/2) * Math.sin(dLon/2);  									.
-					.    		var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 							.
-					.   	  var d = R * c; 																											.
-					.																																						.
-					.    		// Return Distance in Kilometers																		.
-					.    		return d;																														.
-					.		}																																				.
-					.																																						.
-					.............................................................................
-
-
-					PROBLEM 1) - Total no. of orders delivered today, the delivery boy wise.
-
-					SOLUTION - SELECT delivery_boy_id , COUNT(order_id)
-										 FROM order_delivery_record
-										 GROUP BY delivery_boy_id;
-					
-					..............................................................................
-
-
-					PROBLEM 2) - Popular Delivery areas: No. of orders received in an area(sort in descending order)
-
-					SOLUTION - SELECT order_id , COUNT(area_id)
-										 FROM orders
-										 GROUP BY order_id
-										 HAVING COUNT (area_id)>1
-										 ORDER BY DESC;
-
-					
-					..............................................................................
 					
 
-					PROBLEM 3) - Who earned the most today.	
 
-					SOLUTION - SELECT delivery_boy_id SUM(amount_recived)
-										 FROM order_delivery_record
-										 GROUP BY delivery_boy_id
-										 HAVING MAX(amount_recived);			 
+	PROBLEM 1) - Total no. of orders delivered today, the delivery boy wise.
+
+	SOLUTION - SELECT delivery_boy_id , COUNT(order_id)
+						 FROM order_delivery_record
+						 GROUP BY delivery_boy_id;
+	
+	..............................................................................
+
+
+	PROBLEM 2) - Popular Delivery areas: No. of orders received in an area(sort in descending order)
+
+	SOLUTION - SELECT area.area_id , area.area_name,order.order_id
+						 FROM area
+						 GROUP BY area_id
+						 INNER JOIN order ON area.area_id = order.area_id
+						 ORDER BY DESC;
+
+					
+	..............................................................................
+	
+
+	PROBLEM 3) - Who earned the most today.	
+
+	SOLUTION - SELECT delivery_boy_id SUM(amount_recived)
+						 FROM order_delivery_record
+						 GROUP BY delivery_boy_id
+						 HAVING MAX(amount_recived);			 
 
 
 
