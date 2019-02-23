@@ -1,0 +1,210 @@
+------------------------------------   DATABASE DESIGN   -------------------------------------
+
+STEP-1 DETERMINE THE PURPOSE OF THE DATABASE-
+
+
+	The database is for the  Smart Delivery Tracking Management system in this application the customer can place the order by mobile to deliver their items like bags etc. 
+	
+	when the customer will place the order the notification will go to the nearest delivery boy so he has the option to accept refuse this request.delivery boy get 50 rs on every delivery. if the delivery boy will reject the request 30rs will be deducted from his account. if the delivery boy is accepting the request befor the 8 am then he will get 200rs per delivery and if he is accepting the request after the 10pm then he will get 150rs per delivery.
+
+	if the delivery boy will reject the order then the request will go to the second nearest delivery boy.
+
+
+
+
+
+STEP-2 FIND AND ORGANIZE THE INFORMATION REQUIRED-
+
+
+
+	Following are the information required for the project-
+
+	1. Customer information like Name,Email,Password.
+	2. Delivery boy information like Name,Email,Password.
+	3. Item information that customer want to deliver like item name,weight.
+	4. Order information like item name , pickup location ,drop location, pickup time, drop time etc.
+
+
+
+STEP-3 DEVIDE INFORMATION ITEMS INTO MAJOR ENTITIES OR SUBJECTS - 
+
+
+	here are three main entities of the project and they are -
+
+	1. Customer
+	2. Delivery boy
+	3. Orders
+
+
+
+STEP-4 TURN INFORMATION ITEMS INTO COLUMNS -
+
+
+	Following table will be made for the project and they are -
+
+	1. Customer table
+	2. Delivery boy table
+	3. Order table
+	4. Item information table
+	5. Notification table
+	6. Delivery record table
+	7. Rejected orders by delivery boy table
+	8. Todays status table  
+
+
+
+
+STEP-5 SPECIFY PRIMARY KEYS -
+
+	these are the primary keys used in above tables sequentially -
+
+	1. Customer id
+	2. Delivery boy id
+	3. Order id
+	4. Item id
+	5. Notification id
+	6. delivery id
+	7. Reject order id
+	8. status id
+
+
+
+STEP-6 SET UP THE TABLE RELATIONSHIPS - 
+
+	this step will be explained in the E-R diagram.
+
+
+STEP-7 AND 8 THE DESIGN OF THE DATABASE -
+
+
+	customer
+	{
+		int id
+		varchar (20) name 
+		varchar (30) email 
+		varchar (20) password
+		float longnitude
+		float latitude
+	}
+
+	vendors
+	{
+		int id
+		varchar (20) name 
+		varchar (30) email 
+		varchar (20) password
+		float longnitude
+		float latitude
+	}
+
+	vendor_product
+	{
+		vendor_id
+		product_id
+	}
+
+	vendors_bill
+	{
+		int product_id
+		float quantity
+		float taxable_value
+		datetime date
+		float SGST
+		float CGST
+		float CESS
+		float total
+	}
+
+	delivery_boy
+	{
+		int id
+		varchar (20) name
+		varchar (30) email
+		varchar (20) password
+	}
+
+
+
+	product-orders
+	{
+		int order_id
+		int product_id
+	} 		
+
+	orders
+	{
+		int id
+		int item_id
+		int customer_id
+		int vendors_id
+		float pickup_longnitude 
+		float pickup_latitude
+		float drop_longnitude 
+		float drop_latitude
+		datetime pickup_time
+		datetime drop_time
+		datetime date
+	}
+
+	product_information
+	{
+		int id
+		int product_number
+		varchar (20) product_name
+		int product_weight
+	}
+
+
+	delivery_boy_location
+	{
+		int id
+		varchar (50) location_name
+		float Longnitude 
+		float Latitude
+		datetime time,date
+		int delivery_boy_id
+	}
+
+	notification
+	{
+		int id
+		int order_id
+		int delivery_boy_id
+		varchar (50) message
+	}
+
+	delivery_boy_order_status
+	{	
+		int id
+		int order_id
+		int delivery_boy_id
+		boolean accepted/rejected     
+	}
+
+	
+	product_delivery_record
+	{
+		int id
+		int delivery_boy_id
+		int order_id
+		float amount_recived
+		datetime delivery_time
+	}
+
+	order_reject 
+	{
+		int id
+		int delivery_boy_id
+		int order_id
+	}
+
+	product_bill_for_customers
+	{
+		int id
+		int order_if
+		int product_id
+		float discount
+		float total
+	}
+
+	
