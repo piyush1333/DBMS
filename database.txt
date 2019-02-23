@@ -83,8 +83,7 @@ STEP-7 AND 8 THE DESIGN OF THE DATABASE -
 		varchar (20) name 
 		varchar (30) email 
 		varchar (20) password
-		float longnitude
-		float latitude
+		int phone_number
 	}
 
 	vendors
@@ -93,26 +92,30 @@ STEP-7 AND 8 THE DESIGN OF THE DATABASE -
 		varchar (20) name 
 		varchar (30) email 
 		varchar (20) password
+		int phone_number
 		float longnitude
 		float latitude
 	}
 
 	vendor_product
 	{
-		vendor_id
-		product_id
+		int vendor_id
+		int product_id
 	}
 
-	vendors_bill
+	vendors_order_bill
 	{
+		int id
+		int order_id
 		int product_id
 		float quantity
+		float product_price
 		float taxable_value
 		datetime date
 		float SGST
 		float CGST
 		float CESS
-		float total
+		float order_amount
 	}
 
 	delivery_boy
@@ -121,9 +124,8 @@ STEP-7 AND 8 THE DESIGN OF THE DATABASE -
 		varchar (20) name
 		varchar (30) email
 		varchar (20) password
+		int phone_number
 	}
-
-
 
 	product-orders
 	{
@@ -141,6 +143,7 @@ STEP-7 AND 8 THE DESIGN OF THE DATABASE -
 		float pickup_latitude
 		float drop_longnitude 
 		float drop_latitude
+		int area_id
 		datetime pickup_time
 		datetime drop_time
 		datetime date
@@ -165,7 +168,26 @@ STEP-7 AND 8 THE DESIGN OF THE DATABASE -
 		int delivery_boy_id
 	}
 
-	notification
+	customer_location
+	{
+		int id
+		varchar (50) location_name
+		float Longnitude 
+		float Latitude
+		datetime time,date
+		int customer_id
+	}
+
+	area
+	{
+		int id
+		float area_range
+		float Longnitude 
+		float Latitude 
+		varchar area_name
+	}
+
+	notifications
 	{
 		int id
 		int order_id
@@ -182,7 +204,7 @@ STEP-7 AND 8 THE DESIGN OF THE DATABASE -
 	}
 
 	
-	product_delivery_record
+	order_delivery_record
 	{
 		int id
 		int delivery_boy_id
@@ -191,7 +213,7 @@ STEP-7 AND 8 THE DESIGN OF THE DATABASE -
 		datetime delivery_time
 	}
 
-	order_reject 
+	rejected_orders_by_delivery_boy 
 	{
 		int id
 		int delivery_boy_id
@@ -201,10 +223,63 @@ STEP-7 AND 8 THE DESIGN OF THE DATABASE -
 	product_bill_for_customers
 	{
 		int id
-		int order_if
+		int order_id
 		int product_id
+		int customer_id
 		float discount
 		float total
 	}
 
-	
+	......................................SOLUTION.........................................
+
+					................FUNCTION TO GET THE RANGE FOR AREA TABLE.....................
+					.                 																													.
+					.																																						.
+					.		function Haversine(lat1,lon1,lat2,lon2)																	.
+					.		{																																				.
+					. 		  var R = 6372.8; // Earth Radius in Kilometers												.
+					.       var dLat = Deg2Rad(lat2-lat1);  																		.
+					.    		var dLon = Deg2Rad(lon2-lon1);  																		.
+					.    		var a = Math.sin(dLat/2) * Math.sin(dLat/2) + 											.
+					.                    Math.cos(Deg2Rad(lat1)) * Math.cos(Deg2Rad(lat2)) * 		.
+					.                    Math.sin(dLon/2) * Math.sin(dLon/2);  									.
+					.    		var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 							.
+					.   	  var d = R * c; 																											.
+					.																																						.
+					.    		// Return Distance in Kilometers																		.
+					.    		return d;																														.
+					.		}																																				.
+					.																																						.
+					.............................................................................
+
+
+					PROBLEM 1) - Total no. of orders delivered today, the delivery boy wise.
+
+					SOLUTION - SELECT delivery_boy_id , COUNT(order_id)
+										 FROM order_delivery_record
+										 GROUP BY delivery_boy_id;
+					
+					..............................................................................
+
+
+					PROBLEM 2) - Popular Delivery areas: No. of orders received in an area(sort in descending order)
+
+					SOLUTION - SELECT order_id , COUNT(area_id)
+										 FROM orders
+										 GROUP BY order_id
+										 HAVING COUNT (area_id)>1
+										 ORDER BY DESC;
+
+					
+					..............................................................................
+					
+
+					PROBLEM 3) - Who earned the most today.	
+
+					SOLUTION - SELECT delivery_boy_id SUM(amount_recived)
+										 FROM order_delivery_record
+										 GROUP BY delivery_boy_id
+										 HAVING MAX(amount_recived);			 
+
+
+
