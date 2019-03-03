@@ -239,7 +239,7 @@ STEP-7 AND 8 THE DESIGN OF THE DATABASE -
 
 	SOLUTION - SELECT delivery_boy_id , COUNT(order_id)
 						 FROM order_delivery_record
-						 GROUP BY delivery_boy_id;
+						 GROUP BY delivery_boy_id; (checked)
 	
 	..............................................................................
 
@@ -258,10 +258,7 @@ STEP-7 AND 8 THE DESIGN OF THE DATABASE -
 
 	PROBLEM 3) - Who earned the most today.	
 
-	SOLUTION - SELECT delivery_boy_id SUM(amount_recived)
-						 FROM order_delivery_record
-						 GROUP BY delivery_boy_id
-						 HAVING MAX(amount_recived);			 
+	SOLUTION - select delivery_boy_id,sum(amount_recived) from order_delivery_record group by delivery_boy_id   (checked)		 
 
 
 
